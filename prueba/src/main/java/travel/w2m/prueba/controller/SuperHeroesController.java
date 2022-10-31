@@ -1,4 +1,4 @@
-package travel.w2m.controller;
+package travel.w2m.prueba.controller;
 
 import java.util.List;
 
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import travel.w2m.dto.SuperHeroesDto;
-import travel.w2m.service.SuperHeroesService;
+import travel.w2m.prueba.dto.SuperHeroesDto;
+import travel.w2m.prueba.service.SuperHeroesService;
 
 @RestController
 @ResponseBody

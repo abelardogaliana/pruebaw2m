@@ -1,4 +1,4 @@
-package travel.w2m.dto;
+package travel.w2m.prueba.dto;
 
 import java.time.LocalDateTime;
 

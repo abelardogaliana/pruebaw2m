@@ -1,15 +1,15 @@
-package travel.w2m.service.impl;
+package travel.w2m.prueba.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import travel.w2m.dto.SuperHeroesDto;
-import travel.w2m.entity.SuperHeroes;
-import travel.w2m.mapper.SuperHeroesMapper;
-import travel.w2m.repository.SuperHeroesRepository;
-import travel.w2m.service.SuperHeroesService;
+import travel.w2m.prueba.dto.SuperHeroesDto;
+import travel.w2m.prueba.entity.SuperHeroes;
+import travel.w2m.prueba.mapper.SuperHeroesMapper;
+import travel.w2m.prueba.repository.SuperHeroesRepository;
+import travel.w2m.prueba.service.SuperHeroesService;
 
 @Service
 public class SuperHeroesServiceImpl implements SuperHeroesService {

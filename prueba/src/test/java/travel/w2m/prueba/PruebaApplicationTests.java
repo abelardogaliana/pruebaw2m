@@ -14,10 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import travel.w2m.dto.SuperHeroesDto;
-import travel.w2m.entity.SuperHeroes;
-import travel.w2m.repository.SuperHeroesRepository;
-import travel.w2m.service.SuperHeroesService;
+import travel.w2m.prueba.dto.SuperHeroesDto;
+import travel.w2m.prueba.entity.SuperHeroes;
+import travel.w2m.prueba.repository.SuperHeroesRepository;
+import travel.w2m.prueba.service.SuperHeroesService;
 
 @ExtendWith(MockitoExtension.class)
 public class PruebaApplicationTests {
