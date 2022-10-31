@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -19,9 +20,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SuperHeroes {
 
-	private @Id @GeneratedValue Long id;
+	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 	@Column(name = "created_date")
-	private LocalDateTime createdDate;
+	private LocalDateTime created_date;
 	@Column(name = "name")
 	private String name;
 	

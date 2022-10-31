@@ -1,5 +1,6 @@
 package travel.w2m.prueba.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import travel.w2m.prueba.dto.SuperHeroesDto;
+import travel.w2m.prueba.exception.RecordNotFoundException;
+import travel.w2m.prueba.exception.RecordNotModifiedException;
 import travel.w2m.prueba.service.SuperHeroesService;
 
 @RestController
@@ -27,24 +30,38 @@ public class SuperHeroesController {
 	SuperHeroesService superHeroesService;
 
 	@GetMapping("/all")
-	public ResponseEntity<List<SuperHeroesDto>> all() {
-		return ResponseEntity.status(HttpStatus.OK).body(superHeroesService.findAll());
+	public ResponseEntity<List<SuperHeroesDto>> all() throws RecordNotFoundException{
+		List<SuperHeroesDto> res = new ArrayList<>();
+		
+		res = superHeroesService.findAll();
+		
+		if(res != null && res.size() > 0)
+			return ResponseEntity.status(HttpStatus.OK).body(res);
+		
+		else
+			throw new RecordNotFoundException();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<SuperHeroesDto> findId(@PathVariable long id) {
+	public ResponseEntity<SuperHeroesDto> findId(@PathVariable long id) throws RecordNotFoundException {
 
 		SuperHeroesDto aux = null;
 
 		aux = superHeroesService.findOne(id);
 
-		return ResponseEntity.status(HttpStatus.OK).body(aux);
+		if(aux != null)
+			return ResponseEntity.status(HttpStatus.OK).body(aux);
+		else
+			throw new RecordNotFoundException();
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<SuperHeroesDto> put(@PathVariable String id, @RequestBody SuperHeroesDto input) {
+	public ResponseEntity<SuperHeroesDto> put(@PathVariable String id, @RequestBody SuperHeroesDto input) throws RecordNotModifiedException {
 		SuperHeroesDto modified = superHeroesService.modify(Long.valueOf(id), input);
-		return ResponseEntity.status(HttpStatus.OK).body(modified);
+		if(modified != null)
+			return ResponseEntity.status(HttpStatus.OK).body(modified);
+		else
+			throw new RecordNotModifiedException();
 	}
 
 	@PostMapping
@@ -54,9 +71,14 @@ public class SuperHeroesController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Boolean> delete(@PathVariable String id) {
+	public ResponseEntity<Boolean> delete(@PathVariable String id) throws RecordNotFoundException {
 		Boolean deleted = superHeroesService.delete(Long.valueOf(id));
-		return ResponseEntity.status(HttpStatus.OK).body(deleted);
+		
+		if(deleted == true)
+			return ResponseEntity.status(HttpStatus.OK).body(deleted);
+		else
+			throw new RecordNotFoundException();
+			
 	}
 
 }

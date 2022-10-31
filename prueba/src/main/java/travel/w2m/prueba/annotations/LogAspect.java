@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogAspect {
 
-	@Around("@annotation(travel.w2m.annotations.LogExecutionTime)")
+	@Around("@annotation(travel.w2m.prueba.annotations.LogExecutionTime)")
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 		final long start = System.currentTimeMillis();
 

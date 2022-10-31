@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import travel.w2m.prueba.annotations.LogExecutionTime;
 import travel.w2m.prueba.dto.SuperHeroesDto;
 import travel.w2m.prueba.entity.SuperHeroes;
 import travel.w2m.prueba.mapper.SuperHeroesMapper;
@@ -18,6 +19,7 @@ public class SuperHeroesServiceImpl implements SuperHeroesService {
 	SuperHeroesRepository superHeroesRepository;
 
 	@Override
+	@LogExecutionTime
 	public List<SuperHeroesDto> findAll() {
 		List<SuperHeroesDto> listSuperHeroesDto = null;
 		List<SuperHeroes> listSuperHeroes = null;
@@ -71,7 +73,7 @@ public class SuperHeroesServiceImpl implements SuperHeroesService {
 		SuperHeroes aux = superHeroesRepository.findById(id).orElse(null);
 		
 		if(aux != null) {
-			aux.setCreatedDate(heroDto.getCreatedDate());
+			aux.setCreated_date(heroDto.getCreated_date());
 			aux.setName(heroDto.getName());
 			aux = superHeroesRepository.save(aux);
 		}
