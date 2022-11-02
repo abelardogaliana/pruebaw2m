@@ -34,71 +34,97 @@ public class SuperHeroesController {
 
 	@LogExecutionTime
 	@GetMapping("/all")
-	public ResponseEntity<List<SuperHeroesDto>> all() throws RecordNotFoundException{
+	public ResponseEntity<List<SuperHeroesDto>> all() throws Exception {
+
 		List<SuperHeroesDto> res = new ArrayList<>();
-		
-		res = superHeroesService.findAll();
-		
-		if(res != null && res.size() > 0)
-			return ResponseEntity.status(HttpStatus.OK).body(res);
-		
-		else
-			throw new RecordNotFoundException();
+		try {
+			res = superHeroesService.findAll();
+
+			if (res != null && res.size() > 0)
+				return ResponseEntity.status(HttpStatus.OK).body(res);
+
+			else
+				throw new RecordNotFoundException();
+		} catch (Exception e) {
+			throw new Exception();
+		}
 	}
-	
+
 	@GetMapping("/findByName")
-	public ResponseEntity<List<SuperHeroesDto>> findByName(@RequestParam String name) throws RecordNotFoundException, MissingParamException{
+	public ResponseEntity<List<SuperHeroesDto>> findByName(@RequestParam String name) throws Exception {
 		List<SuperHeroesDto> res = new ArrayList<>();
-		
-		if(name == null)
-			throw new MissingParamException();
-		
-		res = superHeroesService.findBySubStringName(name);
-		
-		if(res != null && res.size() > 0)
-			return ResponseEntity.status(HttpStatus.OK).body(res);
-		
-		else
-			throw new RecordNotFoundException();
+		try {
+			if (name == null)
+				throw new MissingParamException();
+
+			res = superHeroesService.findBySubStringName(name);
+
+			if (res != null && res.size() > 0)
+				return ResponseEntity.status(HttpStatus.OK).body(res);
+
+			else
+				throw new RecordNotFoundException();
+		} catch (Exception e) {
+			throw new Exception();
+		}
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<SuperHeroesDto> findId(@PathVariable long id) throws RecordNotFoundException {
+	public ResponseEntity<SuperHeroesDto> findId(@PathVariable long id) throws Exception {
 
 		SuperHeroesDto aux = null;
+		try {
+			aux = superHeroesService.findOne(id);
 
-		aux = superHeroesService.findOne(id);
-
-		if(aux != null)
-			return ResponseEntity.status(HttpStatus.OK).body(aux);
-		else
-			throw new RecordNotFoundException();
+			if (aux != null)
+				return ResponseEntity.status(HttpStatus.OK).body(aux);
+			else
+				throw new RecordNotFoundException();
+		} catch (Exception e) {
+			throw new Exception();
+		}
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<SuperHeroesDto> put(@PathVariable String id, @RequestBody SuperHeroesDto input) throws RecordNotModifiedException {
-		SuperHeroesDto modified = superHeroesService.modify(Long.valueOf(id), input);
-		if(modified != null)
-			return ResponseEntity.status(HttpStatus.OK).body(modified);
-		else
-			throw new RecordNotModifiedException();
+	public ResponseEntity<SuperHeroesDto> put(@PathVariable String id, @RequestBody SuperHeroesDto input)
+			throws Exception {
+
+		try {
+			SuperHeroesDto modified = superHeroesService.modify(Long.valueOf(id), input);
+			if (modified != null)
+				return ResponseEntity.status(HttpStatus.OK).body(modified);
+			else
+				throw new RecordNotModifiedException();
+		} catch (Exception e) {
+			throw new Exception();
+		}
 	}
 
 	@PostMapping
-	public ResponseEntity<Long> post(@RequestBody SuperHeroesDto input) {
-		long save = superHeroesService.save(input);
-		return ResponseEntity.status(HttpStatus.CREATED).body(save);
+	public ResponseEntity<Long> post(@RequestBody SuperHeroesDto input) throws Exception {
+
+		try {
+			long save = superHeroesService.save(input);
+			return ResponseEntity.status(HttpStatus.CREATED).body(save);
+		} catch (Exception e) {
+			throw new Exception();
+		}
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Boolean> delete(@PathVariable String id) throws RecordNotFoundException {
-		Boolean deleted = superHeroesService.delete(Long.valueOf(id));
-		
-		if(deleted == true)
-			return ResponseEntity.status(HttpStatus.OK).body(deleted);
-		else
-			throw new RecordNotFoundException();
-			
+	public ResponseEntity<Boolean> delete(@PathVariable String id) throws Exception {
+
+		try {
+			Boolean deleted = superHeroesService.delete(Long.valueOf(id));
+
+			if (deleted == true)
+				return ResponseEntity.status(HttpStatus.OK).body(deleted);
+			else
+				throw new RecordNotFoundException();
+		} catch (Exception e) {
+			throw new Exception();
+		}
+
 	}
 
 }
