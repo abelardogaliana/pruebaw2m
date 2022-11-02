@@ -3,9 +3,9 @@ package travel.w2m.prueba.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import travel.w2m.prueba.annotations.LogExecutionTime;
 import travel.w2m.prueba.dto.SuperHeroesDto;
 import travel.w2m.prueba.entity.SuperHeroes;
 import travel.w2m.prueba.mapper.SuperHeroesMapper;
@@ -19,7 +19,7 @@ public class SuperHeroesServiceImpl implements SuperHeroesService {
 	SuperHeroesRepository superHeroesRepository;
 
 	@Override
-	@LogExecutionTime
+	@Cacheable(value = "superHeroesCache")
 	public List<SuperHeroesDto> findAll() {
 		List<SuperHeroesDto> listSuperHeroesDto = null;
 		List<SuperHeroes> listSuperHeroes = null;
@@ -28,6 +28,7 @@ public class SuperHeroesServiceImpl implements SuperHeroesService {
 
 		listSuperHeroesDto = SuperHeroesMapper.INSTANCE.map(listSuperHeroes);
 
+		System.out.println("Sin cachear");
 		return listSuperHeroesDto;
 	}
 

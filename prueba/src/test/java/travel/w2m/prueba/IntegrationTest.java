@@ -8,10 +8,14 @@ import java.util.Collection;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
@@ -21,6 +25,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 @RunWith(Parameterized.class)
 public class IntegrationTest {
@@ -37,6 +42,7 @@ public class IntegrationTest {
 
 	@ParameterizedTest
 	@MethodSource("testFindByName")
+	@WithUserDetails(value = "admin")
 	void test(String url, long expectedValue) {
 		System.out.println("testing Url : " + url);
 		urlTest(url, expectedValue);
@@ -48,8 +54,12 @@ public class IntegrationTest {
 			String jsonMimeType = "application/json";
 			HttpUriRequest request = new HttpGet(url);
 
+			CredentialsProvider credentialsPovider = new BasicCredentialsProvider();
+			credentialsPovider.setCredentials(new AuthScope(null, 8081), 
+					   new UsernamePasswordCredentials("admin", "1234"));
+			
 			// When
-			HttpResponse response = HttpClientBuilder.create().build().execute(request);
+			HttpResponse response = HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsPovider).build().execute(request);
 			// Then
 			String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
 			assertEquals(jsonMimeType, mimeType);

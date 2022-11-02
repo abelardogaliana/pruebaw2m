@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import travel.w2m.prueba.annotations.LogExecutionTime;
 import travel.w2m.prueba.dto.SuperHeroesDto;
 import travel.w2m.prueba.exception.MissingParamException;
 import travel.w2m.prueba.exception.RecordNotFoundException;
@@ -31,6 +32,7 @@ public class SuperHeroesController {
 	@Autowired
 	SuperHeroesService superHeroesService;
 
+	@LogExecutionTime
 	@GetMapping("/all")
 	public ResponseEntity<List<SuperHeroesDto>> all() throws RecordNotFoundException{
 		List<SuperHeroesDto> res = new ArrayList<>();

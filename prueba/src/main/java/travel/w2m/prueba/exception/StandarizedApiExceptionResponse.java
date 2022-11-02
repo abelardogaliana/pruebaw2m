@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package travel.w2m.prueba.exception;
-import java.time.LocalDateTime;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -13,22 +14,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.test.context.support.WithUserDetails;
 
 import travel.w2m.prueba.dto.SuperHeroesDto;
 import travel.w2m.prueba.entity.SuperHeroes;
 import travel.w2m.prueba.repository.SuperHeroesRepository;
-import travel.w2m.prueba.service.SuperHeroesService;
+import travel.w2m.prueba.service.impl.SuperHeroesServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
 public class PruebaApplicationTests {
 
 	@InjectMocks
-	SuperHeroesService superHeroesService;
+	SuperHeroesServiceImpl superHeroesService;
 
 	@Mock
 	SuperHeroesRepository superHeroesRepository;
 
 	@Test
+	@WithUserDetails(value = "admin")
 	void testAll() {
 
 		List<SuperHeroes> list = new ArrayList<SuperHeroes>();
@@ -52,13 +55,14 @@ public class PruebaApplicationTests {
 	}
 
 	@Test
+	@WithUserDetails(value = "admin")
 	void test1() {
 
-		SuperHeroes one = new SuperHeroes(1L, LocalDateTime.of(2022, Month.JUNE, 14, 15, 00, 00), "Superman");
+		Optional<SuperHeroes> one = Optional.ofNullable(new SuperHeroes(1L, LocalDateTime.of(2022, Month.JUNE, 14, 15, 00, 00), "Superman"));
 
-		when(superHeroesRepository.findById(1L).orElse(null)).thenReturn(one);
+		when(superHeroesRepository.findById(1L)).thenReturn(one);
 
-		SuperHeroesDto heroDto = superHeroesService.findOne(one.getId());
+		SuperHeroesDto heroDto = superHeroesService.findOne(one.get().getId());
 
 		System.out.println("testing : ");
 		Assert.assertEquals(1L, heroDto.getId().longValue());
