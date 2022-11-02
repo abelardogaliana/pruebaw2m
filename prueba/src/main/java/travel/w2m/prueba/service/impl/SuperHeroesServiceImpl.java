@@ -73,7 +73,7 @@ public class SuperHeroesServiceImpl implements SuperHeroesService {
 		SuperHeroes aux = superHeroesRepository.findById(id).orElse(null);
 		
 		if(aux != null) {
-			aux.setCreated_date(heroDto.getCreated_date());
+			aux.setCreatedDate(heroDto.getCreatedDate());
 			aux.setName(heroDto.getName());
 			aux = superHeroesRepository.save(aux);
 		}

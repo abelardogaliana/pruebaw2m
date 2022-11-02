@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import travel.w2m.prueba.dto.SuperHeroesDto;
+import travel.w2m.prueba.exception.MissingParamException;
 import travel.w2m.prueba.exception.RecordNotFoundException;
 import travel.w2m.prueba.exception.RecordNotModifiedException;
 import travel.w2m.prueba.service.SuperHeroesService;
@@ -34,6 +36,22 @@ public class SuperHeroesController {
 		List<SuperHeroesDto> res = new ArrayList<>();
 		
 		res = superHeroesService.findAll();
+		
+		if(res != null && res.size() > 0)
+			return ResponseEntity.status(HttpStatus.OK).body(res);
+		
+		else
+			throw new RecordNotFoundException();
+	}
+	
+	@GetMapping("/findByName")
+	public ResponseEntity<List<SuperHeroesDto>> findByName(@RequestParam String name) throws RecordNotFoundException, MissingParamException{
+		List<SuperHeroesDto> res = new ArrayList<>();
+		
+		if(name == null)
+			throw new MissingParamException();
+		
+		res = superHeroesService.findBySubStringName(name);
 		
 		if(res != null && res.size() > 0)
 			return ResponseEntity.status(HttpStatus.OK).body(res);

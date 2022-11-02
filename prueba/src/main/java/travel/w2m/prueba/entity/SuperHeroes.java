@@ -22,7 +22,7 @@ public class SuperHeroes {
 
 	private @Id @GeneratedValue(strategy = GenerationType.IDENTITY) Long id;
 	@Column(name = "created_date")
-	private LocalDateTime created_date;
+	private LocalDateTime createdDate;
 	@Column(name = "name")
 	private String name;
 	
