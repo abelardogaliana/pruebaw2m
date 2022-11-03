@@ -3,13 +3,16 @@ package travel.w2m.prueba.exception;
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
 	@ExceptionHandler(RecordNotFoundException.class)
+	@ResponseStatus(HttpStatus.NOT_FOUND)
 	public ResponseEntity<StandarizedApiExceptionResponse> handleException2(RecordNotFoundException ex) {
 		StandarizedApiExceptionResponse response = new StandarizedApiExceptionResponse(ex.getClass().getCanonicalName(),"No ha encontrado superheroes",
 				"error-2", ex.getMessage());
@@ -17,12 +20,14 @@ public class ApiExceptionHandler {
 	}
 	
 	@ExceptionHandler(Exception.class)
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	public ResponseEntity<StandarizedApiExceptionResponse> handleException(Exception ex) {
 		StandarizedApiExceptionResponse response = new StandarizedApiExceptionResponse(ex.getClass().getCanonicalName(),"Error general",
 				"error-1", ex.getMessage());
 		return new ResponseEntity<StandarizedApiExceptionResponse>(response, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(InvalidDataAccessResourceUsageException.class)
 	public ResponseEntity<StandarizedApiExceptionResponse> handleException3(InvalidDataAccessResourceUsageException ex) {
 		StandarizedApiExceptionResponse response = new StandarizedApiExceptionResponse(ex.getClass().getCanonicalName(),"Error al insertar un Objeto en la BD",
@@ -30,6 +35,7 @@ public class ApiExceptionHandler {
 		return new ResponseEntity<StandarizedApiExceptionResponse>(response, HttpStatus.BAD_REQUEST);
 	}
 
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(MissingParamException.class)
 	public ResponseEntity<StandarizedApiExceptionResponse> handleException4(MissingParamException ex) {
 		StandarizedApiExceptionResponse response = new StandarizedApiExceptionResponse(ex.getClass().getCanonicalName(),"Faltan Parametros en el request",
@@ -37,6 +43,13 @@ public class ApiExceptionHandler {
 		return new ResponseEntity<StandarizedApiExceptionResponse>(response, HttpStatus.BAD_REQUEST);
 	}
 	
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<StandarizedApiExceptionResponse> handleException5(AccessDeniedException ex) {
+		StandarizedApiExceptionResponse response = new StandarizedApiExceptionResponse(ex.getClass().getCanonicalName(),"Acceso Denegado.",
+				"error-5", ex.getMessage());
+		return new ResponseEntity<StandarizedApiExceptionResponse>(response, HttpStatus.FORBIDDEN);
+	}
 	
 	
 

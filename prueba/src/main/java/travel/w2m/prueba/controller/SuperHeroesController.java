@@ -17,11 +17,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import travel.w2m.prueba.annotations.LogExecutionTime;
 import travel.w2m.prueba.dto.SuperHeroesDto;
 import travel.w2m.prueba.exception.MissingParamException;
 import travel.w2m.prueba.exception.RecordNotFoundException;
 import travel.w2m.prueba.exception.RecordNotModifiedException;
+import travel.w2m.prueba.exception.StandarizedApiExceptionResponse;
 import travel.w2m.prueba.service.SuperHeroesService;
 
 @RestController
@@ -34,96 +42,89 @@ public class SuperHeroesController {
 
 	@LogExecutionTime
 	@GetMapping("/all")
-	public ResponseEntity<List<SuperHeroesDto>> all() throws Exception {
-
+	@Operation(summary = "Get a list of SuperHeroes")
+	@ApiResponses(value = { 
+	  @ApiResponse(responseCode = "200", description = "Nice request!", 
+	    content = { @Content(mediaType = "application/json", 
+	    		array = @ArraySchema(schema = @Schema(implementation = SuperHeroesDto.class))) }),
+	  @ApiResponse(responseCode = "404", description = "RecordNotFoundException", 
+	    content = { @Content(mediaType = "application/json", 
+	    		schema = @Schema(implementation = StandarizedApiExceptionResponse.class)) }),
+	  @ApiResponse(responseCode = "400", description = "Bad Request", 
+	    content = { @Content(mediaType = "application/json", 
+	    		schema = @Schema(implementation = StandarizedApiExceptionResponse.class)) }),
+	  @ApiResponse(responseCode = "403", description = "Invalid Access", 
+	    content = { @Content(mediaType = "application/json", 
+	    		schema = @Schema(implementation = StandarizedApiExceptionResponse.class)) }),
+	  @ApiResponse(responseCode = "500", description = "Server Error", 
+	    content = { @Content(mediaType = "application/json", 
+	    		schema = @Schema(implementation = StandarizedApiExceptionResponse.class)) }) })
+	public ResponseEntity<List<SuperHeroesDto>> all() throws RecordNotFoundException {
 		List<SuperHeroesDto> res = new ArrayList<>();
-		try {
-			res = superHeroesService.findAll();
 
-			if (res != null && res.size() > 0)
-				return ResponseEntity.status(HttpStatus.OK).body(res);
+		res = superHeroesService.findAll();
 
-			else
-				throw new RecordNotFoundException();
-		} catch (Exception e) {
-			throw new Exception();
-		}
+		if (res != null && res.size() > 0)
+			return ResponseEntity.status(HttpStatus.OK).body(res);
+
+		else
+			throw new RecordNotFoundException();
 	}
 
 	@GetMapping("/findByName")
-	public ResponseEntity<List<SuperHeroesDto>> findByName(@RequestParam String name) throws Exception {
+	public ResponseEntity<List<SuperHeroesDto>> findByName(@RequestParam String name)
+			throws RecordNotFoundException, MissingParamException {
 		List<SuperHeroesDto> res = new ArrayList<>();
-		try {
-			if (name == null)
-				throw new MissingParamException();
 
-			res = superHeroesService.findBySubStringName(name);
+		if (name == null)
+			throw new MissingParamException();
 
-			if (res != null && res.size() > 0)
-				return ResponseEntity.status(HttpStatus.OK).body(res);
+		res = superHeroesService.findBySubStringName(name);
 
-			else
-				throw new RecordNotFoundException();
-		} catch (Exception e) {
-			throw new Exception();
-		}
+		if (res != null && res.size() > 0)
+			return ResponseEntity.status(HttpStatus.OK).body(res);
+
+		else
+			throw new RecordNotFoundException();
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<SuperHeroesDto> findId(@PathVariable long id) throws Exception {
+	public ResponseEntity<SuperHeroesDto> findId(@PathVariable long id) throws RecordNotFoundException {
 
 		SuperHeroesDto aux = null;
-		try {
-			aux = superHeroesService.findOne(id);
 
-			if (aux != null)
-				return ResponseEntity.status(HttpStatus.OK).body(aux);
-			else
-				throw new RecordNotFoundException();
-		} catch (Exception e) {
-			throw new Exception();
-		}
+		aux = superHeroesService.findOne(id);
+
+		if (aux != null)
+			return ResponseEntity.status(HttpStatus.OK).body(aux);
+		else
+			throw new RecordNotFoundException();
 	}
 
 	@PutMapping("/{id}")
 	public ResponseEntity<SuperHeroesDto> put(@PathVariable String id, @RequestBody SuperHeroesDto input)
-			throws Exception {
-
-		try {
-			SuperHeroesDto modified = superHeroesService.modify(Long.valueOf(id), input);
-			if (modified != null)
-				return ResponseEntity.status(HttpStatus.OK).body(modified);
-			else
-				throw new RecordNotModifiedException();
-		} catch (Exception e) {
-			throw new Exception();
-		}
+			throws RecordNotModifiedException {
+		SuperHeroesDto modified = superHeroesService.modify(Long.valueOf(id), input);
+		if (modified != null)
+			return ResponseEntity.status(HttpStatus.OK).body(modified);
+		else
+			throw new RecordNotModifiedException();
 	}
 
 	@PostMapping
-	public ResponseEntity<Long> post(@RequestBody SuperHeroesDto input) throws Exception {
-
-		try {
-			long save = superHeroesService.save(input);
-			return ResponseEntity.status(HttpStatus.CREATED).body(save);
-		} catch (Exception e) {
-			throw new Exception();
-		}
+	public ResponseEntity<Long> post(@RequestBody SuperHeroesDto input) {
+		long save = superHeroesService.save(input);
+		return ResponseEntity.status(HttpStatus.CREATED).body(save);
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Boolean> delete(@PathVariable String id) throws Exception {
+	public ResponseEntity<Boolean> delete(@PathVariable String id) throws RecordNotFoundException {
+		Boolean deleted = superHeroesService.delete(Long.valueOf(id));
 
-		try {
-			Boolean deleted = superHeroesService.delete(Long.valueOf(id));
-
-			if (deleted == true)
-				return ResponseEntity.status(HttpStatus.OK).body(deleted);
-			else
-				throw new RecordNotFoundException();
-		} catch (Exception e) {
-			throw new Exception();
-		}
+		if (deleted == true)
+			return ResponseEntity.status(HttpStatus.OK).body(deleted);
+		else
+			throw new RecordNotFoundException();
 
 	}
 
