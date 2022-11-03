@@ -9,7 +9,7 @@ import travel.w2m.prueba.dto.SuperHeroesDto;
 import travel.w2m.prueba.entity.SuperHeroes;
 
 @Mapper
-public interface SuperHeroesMapper {
+public interface SuperHeroesMapper { 
 
 	SuperHeroesMapper INSTANCE = Mappers.getMapper(SuperHeroesMapper.class);
 
